@@ -1,8 +1,8 @@
-#include "HighLow.hpp"
-#include <cstdint>
-#include <string>
-#include <cstring>
-#include <iostream>
+#include "HighLow.hpp" //for llimit and ulimit
+#include <cstdint>     //for int8_t
+#include <string>      //for stoi()
+#include <cstring>     //for strcmp()
+#include <iostream>    //for cerr and endl
 
 using std::stoi;
 using options::llimit; using options::ulimit;
@@ -10,6 +10,10 @@ using options::llimit; using options::ulimit;
 
 int main(int argc, char *argv[]) {
   if(argc > 0) {
+    /* if any argument is passed to the game it will check if the user wants  *
+     * to change the amount of guesses per number or the upper and lower      *
+     * limit of the random number generated. Other arguments are totally      *
+     * ignored.                                                               */
     for(int i(1); i < argc; i++) {
       if( !(strcmp(argv[i], "-g") && strcmp(argv[i], "--guesses")) )
         options::totalguesses = stoi(argv[i+1]);

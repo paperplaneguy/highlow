@@ -26,8 +26,8 @@ namespace HighLow {
   using options::startscore;
   using options::startguess;
 
-  int8_t level(startlevel), score(options::startscore); //Level count and current score
-  string savefile("saved.hl");
+  int8_t level(startlevel), score(options::startscore); //setting the evel count and current score
+  string savefile("saved.hl"); //the savefile location
 
   string levelStatus() {
     ++level;
