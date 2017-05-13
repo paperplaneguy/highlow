@@ -19,8 +19,12 @@ int main(int argc, char *argv[]) {
         options::totalguesses = stoi(argv[i+1]);
       else if( !(strcmp(argv[i], "-l") && strcmp(argv[i], "--llimit")) )
         llimit = stoi(argv[i+1]);
-      else if( !(strcmp(argv[i], "-u") && strcmp(argv[i], "--ulimit")) )
-        ulimit = stoi(argv[i+1]);
+        else if( !(strcmp(argv[i], "-u") && strcmp(argv[i], "--ulimit")) )
+          ulimit = stoi(argv[i+1]);
+          else {
+            std::cout << "Imvalid Argument " << argv[i] << std::endl;
+            return -1;
+          }
     }
     if(llimit > ulimit) {
       std::cerr << "Invalid limits. Eixiting." << std::endl;
