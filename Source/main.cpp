@@ -3,33 +3,38 @@
 #include <string>      //for stoi()
 #include <cstring>     //for strcmp()
 #include <iostream>    //for cerr and endl
+#include <vector>      //for std::vector
+#include <string>      //for std::string
 
 using std::stoi;
-using options::llimit; using options::ulimit;
+using std::string;
+using std::vector;
+using options::llimit;
+using options::ulimit;
 
+void setArguments(vector<string> args);
 
-int main(int argc, char *argv[]) {
-  if(argc > 0) {
-    /* if any argument is passed to the game it will check if the user wants  *
-     * to change the amount of guesses per number or the upper and lower      *
-     * limit of the random number generated. Other arguments are totally      *
-     * ignored.                                                               */
-    for(int i(1); i < argc; i++) {
-      if( !(strcmp(argv[i], "-g") && strcmp(argv[i], "--guesses")) )
-        options::totalguesses = stoi(argv[i+1]);
-      else if( !(strcmp(argv[i], "-l") && strcmp(argv[i], "--llimit")) )
-        llimit = stoi(argv[i+1]);
-        else if( !(strcmp(argv[i], "-u") && strcmp(argv[i], "--ulimit")) )
-          ulimit = stoi(argv[i+1]);
-          else {
-            std::cout << "Imvalid Argument " << argv[i] << std::endl;
-            return -1;
-          }
-    }
-    if(llimit > ulimit) {
-      std::cerr << "Invalid limits. Eixiting." << std::endl;
-      return -1;
-    }
+int main(int argc, char **argv) {
+  if(argc > 1) (setArguments(vector<string>(argv + 1, argv + argc)));
+  HighLow::game();
+  return 0;
+}
+
+void setArguments(vector<string> arg_v) {
+  /* if any argument is passed to the game it will check if the user wants  *
+   * to change the amount of guesses per number or the upper and lower      *
+   * limit of the random number generated. Other arguments are totally      *
+   * ignored.                                                               */
+  for (size_t i(0); i < arg_v.size(); i++) {
+    if((arg_v[i] == "-g") || (arg_v[i] == "--guesses"))
+      options::totalguesses = stoi(arg_v[++i]);
+    else if ((arg_v[i] == "-l") || (arg_v[i] == "--llimit"))
+      llimit = stoi(arg_v[++i]);
+      else if ((arg_v[i] == "-u") || (arg_v[i] == "--ulimi"))
+        ulimit = stoi(arg_v[++i]);
+        else {
+          std::cerr << "Invalid argument " << arg_v[i] << std::endl;
+          return;
+        }
   }
-  HighLow::game(); return 0;
 }
