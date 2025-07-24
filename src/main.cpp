@@ -5,7 +5,7 @@
 #include <iostream>    //for cerr and endl
 
 using std::stoi;
-using options::llimit; using options::ulimit;
+using options::lower_limit; using options::upper_limit;
 
 
 int main(int argc, char *argv[]) {
@@ -16,17 +16,17 @@ int main(int argc, char *argv[]) {
      * ignored.                                                               */
     for(int i(1); i < argc; i++) {
       if( !(strcmp(argv[i], "-g") && strcmp(argv[i], "--guesses")) )
-        options::totalguesses = stoi(argv[i+1]);
+        options::total_guesses = stoi(argv[i+1]);
       else if( !(strcmp(argv[i], "-l") && strcmp(argv[i], "--llimit")) )
-        llimit = stoi(argv[i+1]);
+        lower_limit = stoi(argv[i+1]);
         else if( !(strcmp(argv[i], "-u") && strcmp(argv[i], "--ulimit")) )
-          ulimit = stoi(argv[i+1]);
+          upper_limit = stoi(argv[i+1]);
           else {
             std::cout << "Imvalid Argument " << argv[i] << std::endl;
             return -1;
           }
     }
-    if(llimit > ulimit) {
+    if(lower_limit > upper_limit) {
       std::cerr << "Invalid limits. Eixiting." << std::endl;
       return -1;
     }

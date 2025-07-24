@@ -1,3 +1,6 @@
+// notes:
+// • consts are used instead of #defines for namespacing
+
 #include <iostream>
 #include "HighLow.hpp"
 #include <random>
@@ -8,7 +11,12 @@
 const string tab("\t");
 
 namespace options {
-  int8_t llimit(0), ulimit(100), totalguesses(7), startlevel(0), startscore(0), startguess(1);
+  int8_t lower_limit  (0)  ,
+         upper_limit  (100),
+         total_guesses(7)  , 
+         start_level  (0)  ,
+         start_score  (0)  ,
+         start_guess  (1)  ;
 }
 
 namespace HighLow {
@@ -20,33 +28,34 @@ namespace HighLow {
   using std::ifstream;
   using std::cin;
 
-  using options::totalguesses;
-  using options::ulimit;
-  using options::startlevel;
-  using options::startscore;
-  using options::startguess;
+  using options::total_guesses;
+  using options::upper_limit;
+  using options::start_level;
+  using options::start_score;
+  using options::start_guess;
 
-  int8_t level(startlevel), score(options::startscore); //setting the evel count and current score
-  string savefile("saved.hl"); //the savefile location
+  //setting the level count and current score
+  int8_t level(start_level), score(options::start_score);
+  const string save_file("saved.hl"); //the save_file location
 
   string levelStatus() {
     ++level;
-    if (level==1)
-      return "Level 1:"+tab+tab+"Score: -";
+    if (level == 1)
+      return "Level 1:" + tab + tab + "Score: -";
     else
       return "Level " + to_string(level) + ":" + tab + tab + "Score: " + to_string(score);
   }
 
   int8_t randomNumber() {
     std::random_device rd; std::mt19937 random(rd());
-    return (static_cast<int>(random() % (ulimit + 1)) + (options::llimit + 1));
+    return ( static_cast<int>(random() % (upper_limit + 1)) + (options::lower_limit + 1) );
   }
 
   void getGuesses(int8_t number) {
-    for(int guess(options::startguess); guess <= totalguesses; guess++){
+    for(int guess(options::start_guess); guess <= total_guesses; guess++){
       cout << "Guess " << guess << ": "; string input; std::getline(std::cin, input);
       if(input == "save" || input == "SAVE") save(guess);
-      if(isnumber(input)) {
+      if(isNumber(input)) {
         if(stoi(input) == number) {score++; cout << "Correct!" << endl << endl; return;}
           else if (stoi(input) < number)  {cout << "Too Low" << endl << endl; continue;}
             else {cout << "Too High" << endl << endl; continue;}
@@ -56,32 +65,34 @@ namespace HighLow {
   }
 
   void game() {
-    if (isresumed()) resume();
+    if (isResumed()) resume();
     else
-      cout << "I am thinking of a number, you have " << static_cast<int>(totalguesses) << " times to guess what it is." << endl;
+      cout << "I am thinking of a number, you have " << static_cast<int>(total_guesses)
+           << " times to guess what it is." << endl;
     do {
       cout << levelStatus() << endl;
       getGuesses(randomNumber());
     } while(score > 0);
-    cout << endl << "You had reached level " << static_cast<int>(level) << ". Nice try! All the best for the next time." << endl;
-    deletesaved();
+    cout << endl << "You had reached level " << static_cast<int>(level)
+         << ". Nice try! All the best for the next time." << endl;
+    deleteSaved();
   }
 
   void save(int8_t guess) {
-    std::ofstream save(savefile, std::ios::trunc);
-    save << --level << score << guess << ulimit << totalguesses;
+    std::ofstream save(save_file, std::ios::trunc);
+    save << --level << score << guess << upper_limit << total_guesses;
     save.close(); exit(0);
   }
 
   void resume() {
-    ifstream file(savefile);
-    file >> startlevel >> startscore >> startguess >> ulimit >> totalguesses;
+    ifstream file(save_file);
+    file >> start_level >> start_score >> start_guess >> upper_limit >> total_guesses;
     file.close();
   }
 
-  void deletesaved() { remove(savefile.c_str()); }
+  void deleteSaved() { remove(save_file.c_str()); }
 
-  bool isnumber(string input) { return (input.find_first_not_of("0123456789") == string::npos); }
+  bool isNumber(string input) { return (input.find_first_not_of("0123456789") == string::npos); }
 
-  bool isresumed() { ifstream file(savefile); return file.good(); }
+  bool isResumed() { ifstream file(save_file); return file.good(); }
 }
